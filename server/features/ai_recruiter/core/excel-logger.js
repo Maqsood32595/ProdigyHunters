@@ -123,6 +123,32 @@ export class ExcelLogger {
       return [];
     }
   }
+
+  /**
+   * Sync the excel file with database candidates before downloading
+   */
+  syncFromDatabase(candidates) {
+    try {
+      const headers = [
+        ['Timestamp', 'Candidate Name', 'Phone Number', 'Status', 'Candidate Response', 'Agency Notes']
+      ];
+      const data = candidates.map(c => [
+        c.timestamp || '',
+        c.name || 'Candidate',
+        c.phone || '',
+        c.status || 'INTERESTED',
+        c.response || c.response_text || '',
+        'Synced from PostgreSQL'
+      ]);
+      const worksheet = XLSX.utils.aoa_to_sheet([...headers, ...data]);
+      worksheet['!cols'] = [{wch:22}, {wch:20}, {wch:18}, {wch:18}, {wch:40}, {wch:30}];
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Interested Candidates');
+      XLSX.writeFile(workbook, this.filePath);
+    } catch (err) {
+      console.error('❌ [Excel Logger] Error syncing from database:', err.message);
+    }
+  }
 }
 
 export const excelLogger = new ExcelLogger();

@@ -15,8 +15,14 @@ router.get('/candidates', async (req, res) => {
 });
 
 // 2. Download the live Excel spreadsheet (.xlsx)
-router.get('/download-excel', (req, res) => {
-  excelLogger.ensureExcelFile();
+router.get('/download-excel', async (req, res) => {
+  if (pgLogger.isConnected) {
+    const candidates = await pgLogger.getAllInterestedCandidates();
+    excelLogger.syncFromDatabase(candidates);
+  } else {
+    excelLogger.ensureExcelFile();
+  }
+  
   const filePath = excelLogger.filePath;
   res.download(filePath, 'interested_candidates.xlsx', (err) => {
     if (err) {

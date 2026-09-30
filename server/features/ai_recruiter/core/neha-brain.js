@@ -45,7 +45,7 @@ export class NehaBrain {
       ? `Hi ${session.candidateName}!`
       : 'Hi!';
 
-    const text = `${namePart} This is Neha calling on behalf of our job agency. Are you currently looking out for a job?`;
+    const text = `${namePart} This is Neha calling on behalf of Prodigy Hunters. Are you currently looking out for a job?`;
     
     if (session) {
       session.state = CALL_STATES.WAITING_FOR_INTEREST;
@@ -135,7 +135,7 @@ export class NehaBrain {
       console.log(`ℹ️ [Neha Brain] Candidate ${session.candidateName} (${session.candidatePhone}) said NO. Leaving it without saving.`);
     } 
     else if (intent === 'IDENTITY_CHECK') {
-      replyText = "This is Neha from our recruitment agency! We're reaching out to check if you're currently open to or looking out for a new job opportunity?";
+      replyText = "This is Neha from Prodigy Hunters recruitment agency! We're reaching out to check if you're currently open to or looking out for a new job opportunity?";
       session.state = CALL_STATES.WAITING_FOR_INTEREST;
     } 
     else {
